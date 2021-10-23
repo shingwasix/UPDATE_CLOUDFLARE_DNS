@@ -2,8 +2,7 @@
 
 用于更新Cloudflare的DNS记录
 
-+ `auth_key` 为 Cloudflare 中的 Global API Key
-+ `auth_email` 为 Cloudflare 的登录邮箱
++ `token` 为 Cloudflare 中的 API 令牌
 + `zone_id` 为 目标域名的 Zone ID
 + `record_type` 为 DNS 记录类型，此处为 A
 + `record_name` 为 需要修改的 DNS 记录名，如：a.example.com
