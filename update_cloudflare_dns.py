@@ -4,20 +4,19 @@
 import requests
 import json
 
-auth_key = "#cloudflare_auth_key#"
-auth_email = "#cloudflare_auth_email#"
+token = "#cloudflare_token#"
 zone_id = "#cloudflare_zone_id#"
 record_type = "A"
 record_name = "a.example.com"
+
 
 def getDnsRecordId():
     url = "https://api.cloudflare.com/client/v4/zones/" + zone_id + "/dns_records"
     method = "GET"
 
     headers = {
-        'X-Auth-Key': auth_key,
-        'X-Auth-Email': auth_email,
-        }
+        'Authorization': 'Bearer ' + token,
+    }
 
     try:
         r = requests.request(method, url, headers=headers)
@@ -27,16 +26,15 @@ def getDnsRecordId():
                 return (item["id"], item["content"])
     except:
         pass
-    
+
 
 def updateDnsRecord(id, ip):
     url = "https://api.cloudflare.com/client/v4/zones/" + zone_id + "/dns_records/" + id
     method = "PUT"
 
     headers = {
-        'X-Auth-Key': auth_key,
-        'X-Auth-Email': auth_email,
-        }
+        'Authorization': 'Bearer ' + token,
+    }
 
     params = {
         'type': record_type,
@@ -50,12 +48,14 @@ def updateDnsRecord(id, ip):
     except:
         pass
 
+
 def getIp():
     try:
-        r = requests.get("http://ip.cip.cc") # OR http://ifconfig.me/ip
+        r = requests.get("http://ip.cip.cc")  # OR http://ifconfig.me/ip
         return r.text.rstrip('\n')
     except:
         pass
+
 
 ip = getIp()
 if ip:
@@ -67,11 +67,11 @@ if ip:
         if result:
             print("update dns record success:", json.dumps(result, indent=1))
         else:
-            print("update dns record faild")
+            print("update dns record failed")
     else:
         if ip == record_ip:
             print("ip has not changed")
         else:
-            print("get ip faild")
+            print("get ip failed")
 else:
-    print("get dns record_id faild")
+    print("get dns record_id failed")
