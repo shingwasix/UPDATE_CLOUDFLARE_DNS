@@ -49,17 +49,39 @@ def updateDnsRecord(id, ip):
         pass
 
 
+def getIpByService(service):
+    try:
+        r = requests.get("http://" + service, timeout=3)
+        return r.text.rstrip('\n')
+    except requests.exceptions.RequestException as e:
+        pass
+    except:
+        pass
+
+
 def getIp():
     try:
-        r = requests.get("http://ip.cip.cc")  # OR http://ifconfig.me/ip
-        return r.text.rstrip('\n')
+        ipServices = [
+            'ip.cip.cc',
+            'icanhazip.com',
+            'ident.me',
+            'whatismyip.akamai.com',
+            'myip.dnsomatic.com',
+            'ifconfig.me',  # 外网
+            'ipinfo.io/ip',  # 外网
+        ]
+
+        for service in ipServices:
+            ip = getIpByService(service)
+            if ip:
+                print("get ip:" + ip + " by service:" + service)
+                return ip
     except:
         pass
 
 
 ip = getIp()
 if ip:
-    print("ip:" + ip)
     record_id, record_ip = getDnsRecordId()
     if record_id and ip != record_ip:
         print("record_id:" + record_id)
